@@ -1,6 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import MenuButton from './MenuButton';
+import {
+    formatTimestampToTime,
+    formatTimestampToDate,
+    getNumberOfPassengers,
+    getBerth,
+    getEstimatedTimeOfArrival,
+    getPortCallsByWeekdayAndPort,
+    getTimeDifference,
+} from './utils';
 
 
 function App() {
@@ -35,74 +44,6 @@ function App() {
         setMenuOpen(!isMenuOpen);
     };
 
-    function formatTimestampToTime(timestamp) {
-        const dateObject = new Date(timestamp);
-        const month = dateObject.getMonth() + 1;
-        const day = dateObject.getDate();
-
-        const hours = dateObject.getHours();
-        const minutes = dateObject.getMinutes();
-
-        return `${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}
-          @${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-    }
-
-    function formatTimestampToDate(timestamp) {
-        const dateObject = new Date(timestamp);
-        const day = dateObject.getDate();
-        const month = dateObject.getMonth() + 1; // Adding 1 because months are zero-indexed
-        const year = dateObject.getFullYear();
-        const hours = dateObject.getHours();
-        const minutes = dateObject.getMinutes();
-        const seconds = dateObject.getSeconds();
-
-        return `${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}.${year} ${String(hours).padStart(2, '0')}:${String(
-            minutes
-        ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-
-    function getNumberOfPassengers(portCall) {
-        if (portCall && portCall.imoInformation && portCall.imoInformation.length > 0) {
-            return portCall.imoInformation[1].numberOfPassangers;
-        } else {
-            return "N/A";
-        }
-    }
-
-    function getBerth(portCall){
-        if (portCall && portCall.imoInformation && portCall.imoInformation.length > 0) {
-            return portCall.portAreaDetails[0].portAreaName;
-        } else {
-            return "N/A";
-        }
-    }
-
-
-    function getEstimatedTimeOfArrival(portCall) {
-        if (portCall && portCall.imoInformation && portCall.portAreaDetails.length > 0) {
-            return formatTimestampToTime(portCall.portAreaDetails[0].eta);
-        } else {
-            return "N/A";
-        }
-    }
-
-    function getPortCallsByWeekdayAndPort(weekday, port) {
-        const filteredPortCalls = portCallData.portCalls.filter(portCall => {
-            const portCallDate = new Date(portCall.portAreaDetails[0].eta);
-            const isCorrectWeekday = portCallDate.getDay() === weekday;
-            const isCorrectPort = portCall.portToVisit === port;
-            return isCorrectWeekday && isCorrectPort;
-        });
-
-        // Sort the filtered port calls by ETA
-        return filteredPortCalls.sort((a, b) => {
-            const etaA = new Date(a.portAreaDetails[0].eta);
-            const etaB = new Date(b.portAreaDetails[0].eta);
-            return etaA - etaB;
-        });
-    }
-
-
     function handleWeekdayButtonClick(weekday) {
         setSelectedWeekday(weekday);
     }
@@ -130,7 +71,9 @@ function App() {
                 <h1>Vessel Passenger Check</h1>
                 <p>Current Time: {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}</p>
                 <p>Data Updated Time: {formatTimestampToDate(portCallData.dataUpdatedTime)}</p>
+            </div>
 
+            <div>
                 {/* Buttons for filtering by weekday */}
                 {weekdays.map((day, index) => (
                     <button
@@ -159,9 +102,10 @@ function App() {
             <div>
                 {/* Render port calls for the selected weekday and port */}
                 {selectedWeekday !== null && selectedPort !== null &&
-                    getPortCallsByWeekdayAndPort(selectedWeekday, selectedPort).map(portCall => (
+                    getPortCallsByWeekdayAndPort(portCallData, selectedWeekday, selectedPort).map(portCall => (
                         <div key={portCall.portCallId}>
-                            <strong>Vessel:</strong> {portCall.vesselName}, <strong>ETA:</strong> {getEstimatedTimeOfArrival(portCall)}
+                            <strong>Vessel:</strong> {portCall.vesselName}, <strong>ETA:</strong> {formatTimestampToTime(getEstimatedTimeOfArrival(portCall))},
+                            <strong> T-</strong>{getTimeDifference(currentTime, portCall.portAreaDetails[0].eta)} Hours
                             <p>Number of Passengers: {getNumberOfPassengers(portCall)}</p>
                             <p>Port of Arrival: {getBerth(portCall)}</p>
                         </div>
