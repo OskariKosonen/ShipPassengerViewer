@@ -25,7 +25,8 @@ export function formatTimestampToDate(timestamp) {
 }
 
 export function getNumberOfPassengers(portCall) {
-    if (portCall && portCall.imoInformation && portCall.imoInformation.length > 0 && portCall.imoInformation[1].numberOfPassangers != null
+    if (portCall && portCall.imoInformation && portCall.imoInformation.length > 1
+        && portCall.imoInformation[1].numberOfPassangers !== null
         && portCall.imoInformation[1].numberOfPassangers > 2) {
         return portCall.imoInformation[1].numberOfPassangers;
     } else {
