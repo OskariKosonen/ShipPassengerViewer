@@ -18,6 +18,9 @@ function App() {
     const [selectedPort, setSelectedPort] = useState(null);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [isMenuOpen, setMenuOpen] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isSimplifiedPortSelection, setIsSimplifiedPortSelection] = useState(false);
+
 
 
     useEffect(() => {
@@ -44,6 +47,15 @@ function App() {
         setMenuOpen(!isMenuOpen);
     };
 
+    const toggleDarkMode = () => {
+        setIsDarkMode(!isDarkMode);
+    };
+
+    const toggleSimplifiedPortSelection = () => {
+        setIsSimplifiedPortSelection(!isSimplifiedPortSelection);
+    };
+
+
     function handleWeekdayButtonClick(weekday) {
         setSelectedWeekday(weekday);
     }
@@ -58,13 +70,16 @@ function App() {
     const uniquePorts = Array.from(new Set(portCallData.portCalls.map(portCall => portCall.portToVisit)));
 
     return (
-        <div className={`App ${isMenuOpen ? 'menu-open' : ''}`}>
-            <MenuButton onClick={toggleMenu} label="Menu" />
+        <div className={`App ${isMenuOpen ? 'menu-open' : ''} ${isDarkMode ? 'dark-mode' : ''}`}>
+            <MenuButton onClick={toggleMenu} isDarkMode={isDarkMode} />
 
             <div className={`menu ${isMenuOpen ? 'slide-in' : 'slide-out'}`}>
-                {/* Menu content goes here */}
-                <button onClick={toggleMenu}>Close Menu</button>
-                {/* Add more menu items or components as needed */}
+                <button onClick={toggleDarkMode}>
+                    {isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                </button>
+                <button onClick={toggleSimplifiedPortSelection}>
+                    {isSimplifiedPortSelection ? 'Disable Simplified Port Selection' : 'Enable Simplified Port Selection'}
+                </button>
             </div>
 
             <div>

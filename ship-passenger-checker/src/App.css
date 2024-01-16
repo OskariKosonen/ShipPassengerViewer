@@ -8,6 +8,8 @@
     padding-left: 10px;
     padding-right: 10px;
     background-color: #fff;
+    transition: background-color 0.3s ease; /* Transition for smooth background color change */
+
 }
 
 /* Styling for the heading */
@@ -65,21 +67,50 @@ div > div > div p {
 
 .menu {
     position: fixed;
-    top: -100%; /* Initially off-screen from the top */
-    left: 0;
-    width: 100%;
-    height: 20%;
+    top: 0;
+    right: -300px; /* Initial position outside the viewport */
+    width: 300px;
+    height: 100%;
     background-color: #fff;
-    transition: transform 0.6s ease; /* Transition for sliding effect */
-    transform: translateY(-100%); /* Initial transformation */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease; /* Transition for smooth sliding effect */
 }
 
-.menu.slide-in {
-    transform: translateY(0); /* Slide in when menu is open */
+.slide-in {
+    right: 0; /* Move the menu into the viewport when open */
 }
 
-.menu.slide-out {
-    transform: translateY(-100%); /* Slide out when menu is closed */
+.slide-out {
+    right: -300px; /* Move the menu outside the viewport when closed */
 }
 
+/* Styling for dark mode */
+.dark-mode {
+    background-color: #333 !important;
+    color: #fff;
+}
 
+/* Styling for dark mode buttons */
+.dark-mode button {
+    background-color: #555;
+    color: #fff;
+}
+
+/* Styling for dark mode pressed buttons */
+.dark-mode button.pressed {
+    background-color: #777;
+}
+
+/* Styling for dark mode menu */
+.dark-mode .menu {
+    background-color: #333;
+}
+
+/* Styling for dark mode heading */
+.dark-mode h1 {
+    color: #fff;
+}
+
+.dark-mode p {
+    color: #fff;
+}
