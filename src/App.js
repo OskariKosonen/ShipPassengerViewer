@@ -66,8 +66,13 @@ function App() {
 
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    //const uniquePorts = ['FIECK', 'FIHEL', 'FITKU', 'FILAN', 'FINLI', 'FIMHQ', 'FIVAA']
-    const uniquePorts = Array.from(new Set(portCallData.portCalls.map(portCall => portCall.portToVisit)));
+    let uniquePorts;
+
+    if (isSimplifiedPortSelection === true){
+         uniquePorts = ['FIECK', 'FIHEL', 'FITKU', 'FILAN', 'FINLI', 'FIMHQ', 'FIVAA']
+    } else {
+         uniquePorts = Array.from(new Set(portCallData.portCalls.map(portCall => portCall.portToVisit)));
+    }
 
     return (
         <div className={`App ${isMenuOpen ? 'menu-open' : ''} ${isDarkMode ? 'dark-mode' : ''}`}>
