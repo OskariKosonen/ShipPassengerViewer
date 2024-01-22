@@ -22,8 +22,7 @@ function App() {
     const [isSimplifiedPortSelection, setIsSimplifiedPortSelection] = useState(false);
 
 
-
-    useEffect(() => {
+    function fetchData() {
         fetch('https://meri.digitraffic.fi/api/port-call/v1/port-calls')
             .then(response => response.json())
             .then(data => {
@@ -33,14 +32,20 @@ function App() {
                 });
             })
             .catch(error => console.error('Error fetching data:', error));
+    }
 
+    function setupInterval() {
         const intervalId = setInterval(() => {
             setCurrentTime(new Date());
         }, 1000);
 
         // Clean up the interval when the component unmounts
         return () => clearInterval(intervalId);
+    }
 
+    useEffect(() => {
+        fetchData();
+        setupInterval();
     }, []);
 
     const toggleMenu = () => {
